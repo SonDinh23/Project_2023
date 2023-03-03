@@ -16,8 +16,8 @@ RTC_DATA_ATTR int8_t stateSleep = 0;
 // WIFI_SSID = "Vulcan Augmetics"
 // WIFI_PASSWORD = "wearevulcan.com"
 
-const char *WIFI_SSID = "Vulcan Augmetics";
-const char *WIFI_PASSWORD = "wearevulcan.com";
+const char *WIFI_SSID = "BO DAM CHO";
+const char *WIFI_PASSWORD = "0902kochoddau795hoilamgif5570mowddi";
 
 #define FIREBASE_HOST "smartwatch-4e534-default-rtdb.firebaseio.com"
 #define FIREBASE_AUTH "h6997DRmUwSgFzGiF5GV5XxOnbtsxlXIaQXNaP1E"
@@ -55,7 +55,7 @@ void Task_Data(void *Parameters)
       }    
       lastTimeA = millis();
     }
-    vTaskDelay(50);
+    vTaskDelay(100);
   }
 }
 
@@ -76,11 +76,12 @@ void Task_Measure(void *Parameters)
         lastTimeC = millis();
       }
       if(stateSS >= 3) {
+        libneopixel.showPixel(0, 0 , 0, 0);
         touchAttachInterrupt(T0, callBack, Threshold);
         esp_sleep_enable_touchpad_wakeup();
+        
         Serial.println("Going to sleep now");
         statett = 0;
-        libneopixel.showPixel(0, 0 , 0, 0);
         liboled.deleteDisplay();
         vTaskDelay(300);
         esp_deep_sleep_start();
@@ -110,7 +111,7 @@ void Task_Sleep(void *Parameters)
       libneopixel.showPixel(0,0,0,0);
     } else if(touchRead(touchPin) > 50) {
       statett = 0;
-      libneopixel.showPixel(0, 0 , 0, 150);
+      //libneopixel.showPixel(0, 0 , 0, 150);
     }
     
     if (statett >=3)
@@ -128,7 +129,7 @@ void Task_Sleep(void *Parameters)
       // xTaskCreatePinnedToCore(Task_Sleep1, "Task_Sleep1", 5000, NULL, 1, &task_sleep1, 0);
     }
     //Serial.println("ok");
-    vTaskDelay(50);
+    vTaskDelay(100);
   }
 }
 
@@ -170,9 +171,9 @@ void setup()
     Serial.println("This will never be printed");
   }
 
-  xTaskCreatePinnedToCore(Task_Measure, "Task_Measure", 7000, NULL, 3, &task_measure, 1);
-  xTaskCreatePinnedToCore(Task_Sleep, "Task_Sleep", 7000, NULL, 2, &task_sleep, 0);
-  xTaskCreatePinnedToCore(Task_Data, "Task_Data", 10000, NULL, 0, &task_data, 0);
+  xTaskCreatePinnedToCore(Task_Measure, "Task_Measure", 10000, NULL, 3, &task_measure, 1);
+  xTaskCreatePinnedToCore(Task_Sleep, "Task_Sleep", 10000, NULL, 2, &task_sleep, 0);
+  xTaskCreatePinnedToCore(Task_Data, "Task_Data", 10000, NULL, 1, &task_data, 0);
   
   vTaskStartScheduler();
 }
